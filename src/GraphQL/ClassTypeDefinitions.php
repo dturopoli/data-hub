@@ -37,19 +37,14 @@ class ClassTypeDefinitions
     {
         $db = Db::get();
         $listing = $db->fetchAllAssociative('SELECT id, name FROM classes');
-
         foreach ($listing as $class) {
-            $id = $class['id'];
-            $name = $class['name'];
-            $objectType = new PimcoreObjectType($graphQlService, $name, $id, [], $context);
-            self::$definitions[$name] = $objectType;
+            self::$definitions[$class['name']] = $graphQlService->buildDataObjectType($class['name'], [], $context);
         }
 
         /**
-         * @var string $name
          * @var PimcoreObjectType $definition
          */
-        foreach (self::$definitions as $name => $definition) {
+        foreach (self::$definitions as $definition) {
             $definition->build($context);
         }
     }
